@@ -1,0 +1,33 @@
+{
+	"schemaVersion": 1,
+	"id": "mathmayhem",
+	"version": "${version}",
+	"name": "Math Mayhem",
+	"description": "Tampers with floating-point and double arithmetic in real time. Slightly wrong math, very wrong worlds.",
+	"authors": [
+		"Math Mayhem contributors"
+	],
+	"license": "MIT",
+	"icon": "assets/mathmayhem/icon.png",
+	"environment": "client",
+	"entrypoints": {
+		"client": [
+			"com.mathmayhem.client.MathMayhemClient"
+		]
+	},
+	"mixins": [
+		{
+			"config": "mathmayhem.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=${loader_version}",
+		"minecraft": "~${minecraft_version}",
+		"java": ">=25",
+		"fabric-api": "*"
+	},
+	"suggests": {
+		"modmenu": "*"
+	}
+}

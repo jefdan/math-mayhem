@@ -1,0 +1,9 @@
+{
+	"key.category.mathmayhem.general": "Math Mayhem",
+	"key.mathmayhem.open": "Open Math Mayhem panel",
+	"key.mathmayhem.panic": "Emergency safe-off (Math Mayhem)",
+	"screen.mathmayhem.title": "Math Mayhem",
+	"screen.mathmayhem.tooltip": "Open settings before loading a world. F7 is an emergency safe-off.",
+	"message.mathmayhem.panic": "Math Mayhem safe-off: tampering disabled and dangerous values reset.",
+	"message.mathmayhem.copied": "Copied the -javaagent argument to the clipboard."
+}

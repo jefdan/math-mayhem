@@ -1,0 +1,137 @@
+plugins {
+	id 'net.fabricmc.fabric-loom' version "${loom_version}"
+	id 'maven-publish'
+}
+
+version = project.mod_version
+group = project.maven_group
+
+base {
+	archivesName = project.archives_base_name
+}
+
+repositories {
+	// Loom adds the Fabric, Mojang and Maven Central repositories automatically.
+}
+
+loom {
+	splitEnvironmentSourceSets()
+
+	mods {
+		"mathmayhem" {
+			sourceSet sourceSets.main
+			sourceSet sourceSets.client
+		}
+	}
+}
+
+dependencies {
+	minecraft "com.mojang:minecraft:${project.minecraft_version}"
+	implementation "net.fabricmc:fabric-loader:${project.loader_version}"
+	implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+
+	// ASM is supplied by Fabric Loader at runtime. Keeping it compile-only avoids
+	// shipping a second copy of ASM into the agent's system class loader.
+	compileOnly "org.ow2.asm:asm:${project.asm_version}"
+	testImplementation "org.ow2.asm:asm:${project.asm_version}"
+
+	testImplementation platform("org.junit:junit-bom:${project.junit_version}")
+	testImplementation "org.junit.jupiter:junit-jupiter"
+	testRuntimeOnly "org.junit.platform:junit-platform-launcher"
+}
+
+processResources {
+	inputs.property "version", project.version
+	inputs.property "minecraft_version", project.minecraft_version
+	inputs.property "loader_version", project.loader_version
+
+	filesMatching("fabric.mod.json") {
+		expand "version": project.version,
+				"minecraft_version": project.minecraft_version,
+				"loader_version": project.loader_version
+	}
+}
+
+tasks.withType(JavaCompile).configureEach {
+	it.options.release = 25
+	it.options.encoding = "UTF-8"
+}
+
+java {
+	withSourcesJar()
+	sourceCompatibility = JavaVersion.VERSION_25
+	targetCompatibility = JavaVersion.VERSION_25
+}
+
+// The same jar is both a Fabric mod and a JVM agent. Adding
+// -javaagent:/path/to/mathmayhem-1.0.0.jar enables the full "all operations" mode.
+jar {
+	manifest {
+		attributes(
+				"Premain-Class": "com.mathmayhem.agent.MathMayhemAgent",
+				"Agent-Class": "com.mathmayhem.agent.MathMayhemAgent",
+				"Can-Redefine-Classes": "true",
+				"Can-Retransform-Classes": "true",
+				"Implementation-Title": "Math Mayhem",
+				"Implementation-Version": project.version
+		)
+	}
+
+	from("LICENSE") {
+		rename { "${it}_${project.archives_base_name}" }
+	}
+}
+
+// A small agent-only jar used by the development run and useful for launchers
+// that prefer to keep the JVM agent separate from the mod jar.
+def agentJarTask = tasks.register("agentJar", Jar) {
+	archiveFileName = "mathmayhem-agent.jar"
+	destinationDirectory = layout.buildDirectory.dir("agent")
+	from(sourceSets.main.output) {
+		include "com/mathmayhem/agent/**"
+	}
+	manifest {
+		attributes(
+				"Premain-Class": "com.mathmayhem.agent.MathMayhemAgent",
+				"Agent-Class": "com.mathmayhem.agent.MathMayhemAgent",
+				"Can-Redefine-Classes": "true",
+				"Can-Retransform-Classes": "true",
+				"Implementation-Title": "Math Mayhem Agent",
+				"Implementation-Version": project.version
+		)
+	}
+}
+
+// Make the development client use the agent automatically. If this argument is
+// absent the mod still works, but only the crash-resistant worldgen mode is active.
+loom {
+	runs {
+		named("client") {
+			vmArg "-javaagent:${layout.buildDirectory.file("agent/mathmayhem-agent.jar").get().asFile.absolutePath}"
+		}
+	}
+}
+
+tasks.matching { it.name == "runClient" }.configureEach {
+	dependsOn agentJarTask
+}
+
+tasks.matching { it.name == "assemble" }.configureEach {
+	dependsOn agentJarTask
+}
+
+tasks.named("test") {
+	useJUnitPlatform()
+}
+
+publishing {
+	publications {
+		create("mavenJava", MavenPublication) {
+			from components.java
+		}
+	}
+
+	repositories {
+		// Add publishing repositories here if needed.
+	}
+}

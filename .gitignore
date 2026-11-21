@@ -1,0 +1,41 @@
+# Gradle
+.gradle/
+build/
+out/
+bin/
+
+# Fabric / Loom development runtime
+run/
+.loom-cache/
+.fabric/
+
+# Compiled classes and JVM crash data
+*.class
+hs_err_pid*
+replay_pid*
+*.hprof
+
+# Logs and crash reports
+*.log
+logs/
+crash-reports/
+
+# Local machine configuration and secrets
+local.properties
+.env
+.env.*
+
+# IDE files
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+.fleet/
+.settings/
+.classpath
+.project
+
+# OS metadata
+.DS_Store
+Thumbs.db

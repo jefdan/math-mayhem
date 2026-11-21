@@ -1,0 +1,9 @@
+# Normalize text files to LF; keep Windows launchers usable.
+* text=auto eol=lf
+*.bat text eol=crlf
+gradlew text eol=lf
+
+# Binary artifacts
+*.jar binary
+*.png binary
+*.class binary
