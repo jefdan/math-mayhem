@@ -1,3 +1,60 @@
+# About
+
+> [!IMPORTANT]
+> Please use the mod detailed in [this video](https://youtu.be/o3F4xWbs1U0) instead.
+
+![alt text](docs/image.png)
+
+> [!WARNING]
+> This repository is completely AI-generated.
+
+I saw [this video](https://youtu.be/bm33vG-QHvE) on YouTube recently where the creator uses a Minecraft mod to tweak the mathematics of Minecraft, resulting in some very interesting effects, particularly in terrain generation.
+
+I wanted to try this for myself, but at the time of watching the creator had not released their mod. I had recently bought some DeepSeek API access and thought that using DeepSeek to create the mod might be a good way to test its capabilities.
+
+I asked Gemini 3.6 Flash to create a prompt for me, and then gave that prompt to DeepSeek V4.1 Flash 1017 ([API](https://platform.deepseek.com) + [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness)):
+
+```markdown
+You are an expert Minecraft modding engineer and JVM bytecode specialist. I want you to build a fully functional, client-side Minecraft mod (using Fabric for the latest stable version) that dynamically tampers with all floating-point and double-precision math operations in real-time, causing surreal world-generation glitches, floating islands, and distorted physics—similar to the mod showcased by FibbWare in "Minecraft but all math is slightly wrong."
+
+### Requirements & Architecture
+
+1. **Mod Loader & Environment:**
+   - Target **Fabric** (latest stable version).
+   - Client-side only (`client` environment).
+
+2. **Core Mechanism (Java Instrumentation / Bytecode Manipulation):**
+   - Implement a custom JVM transformation routine or use a bytecode library compatible with Fabric (like Byte Buddy or direct ASM class visitors) that hooks into class loading.
+   - Intercept primitive arithmetic bytecode instructions for floats and doubles:
+     - Addition: `FADD`, `DADD`
+     - Multiplication: `FMUL`, `DMUL`
+     - Division: `FDIV`, `DDIV`
+   - Modify these instructions or inject post-calculation scaling/offset hooks so that every math operation is perturbed by a configurable modifier.
+
+3. **Live Configuration Control Panel (GUI):**
+   - Build a clean in-game configuration screen (accessible via a keybind like `F6` or `Right Shift`, or integrated via Mod Menu).
+   - Include interactive sliders and toggles for:
+     - **Multiplier / Scaling Offset:** Adjust from `0.90` to `1.10` (or wider ranges) on the fly.
+     - **Operation Filters:** Toggle whether math tampering applies to *all* operations, or restrict it specifically to noise samplers (`PerlinNoiseSampler`, `SimplexNoiseSampler`) and world generation heightmaps to preserve stability while keeping the wild terrain generation.
+     - **Randomness / RNG Injection Mode:** Option to apply static scaling vs. a periodic time-based jitter/random offset that shifts every few seconds.
+
+4. **Crash Prevention & Safety Fallbacks:**
+   - Wrap injected math hooks in try-catch blocks or filter out critical game loop / rendering thread classes where `NaN` or `Infinity` would cause immediate hard crashes of the JVM.
+   - If a calculation results in an illegal state (`NaN`), fall back gracefully to the original unmanipulated value or zero.
+
+5. **Project Structure & Deliverables:**
+   - Provide the complete Gradle configuration (`build.gradle`, `gradle.properties`), `fabric.mod.json`, and all necessary Java source files (Agent/Mixin logic, GUI screen, and keybind handlers).
+   - Write clear instructions on how to build the mod jar using `./gradlew build` and run it in the Fabric development environment.
+```
+
+DeepSeek worked for 13 minutes and 3 seconds, completely independently before delivering a final result, costing $0.109. The final result worked on the first try. I was quite impressed with how DeepSeek launched Minecraft itself and took screenshots to verify what it had done was working. I'm also impressed with how fast and cheap the process was.
+
+This repository exists mostly in case I would like to play the mod in the future, and to showcase the effectiveness of low-cost models.
+
+I should mention that the creator [has now released their mod](https://youtu.be/o3F4xWbs1U0). I don't want to detract from their hard work with this, so I would recommend that you use their mod instead.
+
+Everything below this line was written by AI.
+
 # Math Mayhem
 
 **Minecraft but the floating-point math is slightly wrong.**
