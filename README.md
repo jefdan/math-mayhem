@@ -400,31 +400,6 @@ them millions of times.
   every class in the JVM.
 - This is not a shader or a resource pack; it changes arithmetic itself.
 
-## Repository and Gitea
-
-The default branch is `main`. Generated files (`build/`, `.gradle/`, `run/`) are
-ignored, so the repository contains source, Gradle wrapper files, the mod icon,
-and documentation only.
-
-A Gitea Actions workflow lives at
-[`.gitea/workflows/build.yml`](.gitea/workflows/build.yml). It builds and tests
-the project on push and pull request. If your runner uses a different label,
-change `runs-on: ubuntu-latest` in that file.
-
-To push a fresh clone to your own Gitea instance:
-
-```bash
-git remote add origin https://your-gitea-host/owner/mathmayhem.git
-git push -u origin main
-```
-
-The built jar is intentionally not committed. After a successful build, attach
-`build/libs/mathmayhem-1.0.1.jar` (and optionally
-`build/agent/mathmayhem-agent.jar`) to a Gitea release.
-
-See [CONTRIBUTING.md](CONTRIBUTING.md) for development workflow and
-[CHANGELOG.md](CHANGELOG.md) for release history.
-
 ## License
 
 MIT. See [LICENSE](LICENSE).
