@@ -106,13 +106,15 @@ the title screen. **F7** performs an emergency safe-off.
 ./gradlew build
 ```
 
-Outputs:
+Outputs (replace `<version>` with the Date-Ver value from `gradle.properties`,
+for example `2026.11.24`):
 
-- `build/libs/mathmayhem-1.0.1.jar` — the Fabric mod. It is **also** a valid JVM
-  agent (its manifest contains `Premain-Class`).
-- `build/libs/mathmayhem-1.0.1-sources.jar` — sources.
+- `build/libs/mathmayhem-<version>.jar` — the Fabric mod. It is **also** a valid
+  JVM agent (its manifest contains `Premain-Class`).
+- `build/libs/mathmayhem-<version>-sources.jar` — sources.
 - `build/agent/mathmayhem-agent.jar` — a small agent-only jar for development or
-  launchers that prefer a separate agent.
+  launchers that prefer a separate agent. Releases publish it as
+  `mathmayhem-agent-<version>.jar`.
 
 Run the unit tests with:
 
@@ -120,21 +122,39 @@ Run the unit tests with:
 ./gradlew test
 ```
 
+## Releases
+
+Releases are cut from Git tags, not from a branch. Pushing a tag whose name
+equals `mod_version` in `gradle.properties` makes GitHub Actions compile the
+mod, run the tests, and publish a GitHub Release for that tag containing:
+
+- `mathmayhem-<version>.jar`
+- `mathmayhem-<version>-sources.jar`
+- `mathmayhem-agent-<version>.jar`
+- `SHA256SUMS.txt`
+
+Versions follow [Date-Ver](https://date-ver.com/) at day granularity
+(`YYYY.MM.DD` in UTC), so the version doubles as the release date; a second
+release on the same day appends a sequence number (`2026.11.24.1`). Tags that do
+not match `mod_version` fail before anything is built, and a failing test means
+no release is created. See [CONTRIBUTING.md](CONTRIBUTING.md#releasing) for the
+procedure.
+
 ## Installation
 
 1. Install Fabric Loader 26.3 and Fabric API.
-2. Put `mathmayhem-1.0.1.jar` in `.minecraft/mods/`.
+2. Put `mathmayhem-<version>.jar` in `.minecraft/mods/`.
 3. Start the game once. The **worldgen fallback** works immediately.
 4. To enable **All game math**, add this JVM argument to the launch profile:
 
 ```text
--javaagent:/absolute/path/to/.minecraft/mods/mathmayhem-1.0.1.jar
+-javaagent:/absolute/path/to/.minecraft/mods/mathmayhem-<version>.jar
 ```
 
 Quote the path if it contains spaces:
 
 ```text
--javaagent:"/Users/me/Library/Application Support/PrismLauncher/instances/MC 26.3/minecraft/mods/mathmayhem-1.0.1.jar"
+-javaagent:"/Users/me/Library/Application Support/PrismLauncher/instances/MC 26.3/minecraft/mods/mathmayhem-<version>.jar"
 ```
 
 Where to put it:

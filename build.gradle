@@ -64,7 +64,7 @@ java {
 }
 
 // The same jar is both a Fabric mod and a JVM agent. Adding
-// -javaagent:/path/to/mathmayhem-1.0.0.jar enables the full "all operations" mode.
+// -javaagent:/path/to/mathmayhem-<version>.jar enables the full "all operations" mode.
 jar {
 	manifest {
 		attributes(

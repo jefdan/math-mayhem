@@ -1,7 +1,25 @@
 # Changelog
 
-All notable changes to Math Mayhem are documented here. The project follows
-semantic versioning for its own releases.
+All notable changes to Math Mayhem are documented here.
+
+Releases use [Date-Ver](https://date-ver.com/) at day granularity, so a heading
+such as `## 2026.11.24` is both the version and the Git tag. A second release on
+the same day appends a sequence number (`## 2026.11.24.1`). Headings below the
+switch keep their original semantic version numbers.
+
+## 2026.11.24
+
+### Added
+
+- GitHub Actions release workflow: pushing a Date-Ver tag compiles the mod on
+  JDK 25, runs the unit tests, and publishes the mod jar, the sources jar, the
+  agent jar and `SHA256SUMS.txt` to a GitHub Release for that tag.
+
+### Changed
+
+- Versions now follow Date-Ver (`YYYY.MM.DD` in UTC) rather than semantic
+  versioning. The tag, jar name, `fabric.mod.json` version and changelog
+  heading are one and the same string.
 
 ## 1.0.1 — 2026-11-12
 

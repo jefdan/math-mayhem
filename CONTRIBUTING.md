@@ -52,6 +52,49 @@ Math Mayhem intentionally corrupts worlds. When testing aggressive settings:
 - Keep the **Safe Off** path working: F7, the title-screen panel, the in-game
   **Safe Off** button, and automatic crash recovery.
 
+## Releasing
+
+Releases are cut by pushing a tag. `mod_version` in `gradle.properties` is the
+single source of truth and the tag must be the same string.
+
+1. Stamp the version with the current UTC date:
+
+   ```bash
+   date -u +%Y.%m.%d
+   ```
+
+2. Set `mod_version` in `gradle.properties` to that value, and add a matching
+   `## <version>` heading to `CHANGELOG.md`. The heading is what becomes the
+   release notes. For a second release on the same day, append a sequence
+   number (`2026.11.24.1`) instead of reusing the date.
+3. Run `./gradlew build` and check the jars in `build/libs/` and
+   `build/agent/`.
+4. Commit the version bump and the changelog together.
+5. Tag that commit and push the tag:
+
+   ```bash
+   git tag 2026.11.24
+   git push origin 2026.11.24
+   ```
+
+The tag push starts the `Release` workflow. It re-checks that the tag matches
+`mod_version`, builds and tests the mod, and publishes the jars plus
+`SHA256SUMS.txt` to a GitHub Release for that tag. A failing test means no
+release is created.
+
+Notes:
+
+- Push tags by name, not with `git push --tags`, so stale local tags are not
+  published.
+- Creating a release in the GitHub UI does not start the workflow; it only fires
+  on a tag push.
+- If the tagged commit is broken, delete the tag locally and on the remote, fix,
+  and re-tag. Re-running the workflow for an existing tag updates that release
+  in place instead of creating a second one.
+- Stay on UTC. The version is the UTC release date, not the local one.
+- Sequence numbers must not have leading zeros: `2026.11.24.1`, never
+  `2026.11.24.01`.
+
 ## Reporting issues
 
 Include:
